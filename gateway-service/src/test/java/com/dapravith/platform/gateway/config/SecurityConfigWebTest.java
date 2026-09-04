@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @WebFluxTest(controllers = SecurityConfigWebTest.ProbeController.class)
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, SecurityConfigWebTest.ProbeController.class})
 class SecurityConfigWebTest {
   @Autowired
   private WebTestClient webTestClient;
