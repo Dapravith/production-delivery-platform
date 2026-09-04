@@ -1,0 +1,31 @@
+global:
+  registry: registry.example.com/platform
+  imagePullPolicy: IfNotPresent
+gateway:
+  image: gateway-service
+  tag: latest
+  replicas: 2
+  port: 8080
+  resources:
+    requests: { cpu: 100m, memory: 256Mi }
+    limits: { cpu: 500m, memory: 512Mi }
+order:
+  image: order-service
+  tag: latest
+  replicas: 2
+  port: 8081
+  resources:
+    requests: { cpu: 150m, memory: 256Mi }
+    limits: { cpu: "1", memory: 768Mi }
+config:
+  oidcIssuerUri: https://identity.example.com/realms/platform
+  oidcJwkSetUri: http://keycloak.security.svc:8080/realms/platform/protocol/openid-connect/certs
+  redisHost: redis-master.data.svc
+  r2dbcUrl: r2dbc:postgresql://postgresql.data.svc:5432/platform
+  jdbcUrl: jdbc:postgresql://postgresql.data.svc:5432/platform
+  kafkaBootstrapServers: kafka.data.svc:9092
+secrets:
+  existingSecret: platform-database
+serviceMonitor:
+  enabled: true
+  additionalLabels: {}

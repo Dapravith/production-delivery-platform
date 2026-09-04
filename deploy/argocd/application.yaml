@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: { name: production-delivery-platform, namespace: argocd }
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/your-org/production-delivery-platform-gitops.git
+    targetRevision: main
+    path: deploy/helm/platform
+    helm: { valueFiles: [values-prod.yaml] }
+  destination: { server: https://kubernetes.default.svc, namespace: platform }
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]
+    retry: { limit: 5, backoff: { duration: 5s, factor: 2, maxDuration: 3m } }

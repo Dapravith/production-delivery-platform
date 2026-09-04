@@ -1,0 +1,14 @@
+{{- if .Values.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: production-delivery-platform
+  {{- with .Values.serviceMonitor.additionalLabels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  selector:
+    matchExpressions: [{ key: app, operator: In, values: [gateway-service, order-service] }]
+  endpoints: [{ port: http, path: /actuator/prometheus, interval: 30s }]
+{{- end }}

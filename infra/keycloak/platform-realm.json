@@ -1,0 +1,57 @@
+{
+  "realm": "platform",
+  "enabled": true,
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "sslRequired": "external",
+  "accessTokenLifespan": 300,
+  "clientScopes": [
+    {
+      "name": "orders.read",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "true", "display.on.consent.screen": "false" }
+    },
+    {
+      "name": "orders.write",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "true", "display.on.consent.screen": "false" }
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "platform-cli",
+      "name": "Local Platform CLI",
+      "protocol": "openid-connect",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "defaultClientScopes": ["orders.read", "orders.write"]
+    }
+  ],
+  "users": [
+    {
+      "username": "demo-user",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "User",
+      "email": "demo@example.invalid",
+      "credentials": [
+        { "type": "password", "value": "demo-password", "temporary": false }
+      ]
+    },
+    {
+      "username": "other-user",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Other",
+      "lastName": "User",
+      "email": "other@example.invalid",
+      "credentials": [
+        { "type": "password", "value": "other-password", "temporary": false }
+      ]
+    }
+  ]
+}

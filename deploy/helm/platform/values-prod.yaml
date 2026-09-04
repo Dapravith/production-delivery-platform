@@ -1,0 +1,24 @@
+global:
+  registry: registry.example.com/platform
+  imagePullPolicy: IfNotPresent
+
+gateway:
+  tag: "1.0.0"
+
+order:
+  tag: "1.0.0"
+
+config:
+  oidcIssuerUri: https://identity.example.com/realms/platform
+  oidcJwkSetUri: http://keycloak.security.svc:8080/realms/platform/protocol/openid-connect/certs
+  redisHost: redis-master.data.svc
+  r2dbcUrl: r2dbc:postgresql://postgresql.data.svc:5432/platform
+  jdbcUrl: jdbc:postgresql://postgresql.data.svc:5432/platform
+  kafkaBootstrapServers: kafka.data.svc:9092
+
+secrets:
+  existingSecret: platform-database
+
+serviceMonitor:
+  additionalLabels:
+    release: kube-prometheus-stack

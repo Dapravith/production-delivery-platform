@@ -1,0 +1,83 @@
+name: Backlog item
+description: Add a feature, infrastructure, security, test, or operational work item.
+title: "[PDP-###] "
+labels: []
+projects: []
+assignees: []
+body:
+  - type: dropdown
+    id: lifecycle
+    attributes:
+      label: Lifecycle stage
+      options:
+        - Plan
+        - Develop
+        - Development environment
+        - Test
+        - Staging
+        - UAT
+        - Production
+        - Hypercare
+        - Closure
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: Describe the result, not only the implementation activity.
+      placeholder: When this is complete, the system will...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and value
+      description: Explain why the work matters and what problem it solves.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      value: |
+        - [ ] Observable result is defined
+        - [ ] Required tests pass
+        - [ ] Documentation is updated
+        - [ ] Security and data impact are reviewed
+        - [ ] Evidence is attached or linked
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options: [P0, P1, P2, P3]
+    validations:
+      required: true
+  - type: dropdown
+    id: size
+    attributes:
+      label: Size
+      options: [S, M, L]
+    validations:
+      required: true
+  - type: input
+    id: sprint
+    attributes:
+      label: Target sprint
+      placeholder: S01 or Backlog
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies and risks
+      placeholder: Related PDP IDs, access, environment, security, or delivery risks
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Required evidence
+      placeholder: Commit, test report, image digest, Argo revision, dashboard, or approval
+    validations:
+      required: true
