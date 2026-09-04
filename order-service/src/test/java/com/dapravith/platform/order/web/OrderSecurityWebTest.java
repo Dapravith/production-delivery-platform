@@ -80,7 +80,8 @@ class OrderSecurityWebTest {
         new BigDecimal("25.00"),
         "USD",
         "CREATED",
-        Instant.now());
+        Instant.now(),
+        0L);
     when(repository.findAllByCustomerIdOrderByCreatedAtDesc("customer-123"))
         .thenReturn(Flux.just(order));
 
