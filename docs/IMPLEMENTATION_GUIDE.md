@@ -105,7 +105,7 @@ Create an order through the gateway:
 curl --fail --silent --show-error \
   -H "Authorization: Bearer $ACCESS_TOKEN" \
   -H 'Content-Type: application/json' \
-  -d '{"amount":10.50}' \
+  -d '{"amount":10.50,"currency":"USD"}' \
   http://localhost:8080/api/orders
 ```
 
@@ -161,8 +161,10 @@ The application chart expects its dependencies and database Secret to exist.
 ```bash
 kubectl create namespace platform
 kubectl -n platform create secret generic platform-database \
-  --from-literal=username='REPLACE_ME' \
-  --from-literal=password='REPLACE_ME'
+  --from-literal=app-username='REPLACE_APP_USER' \
+  --from-literal=app-password='REPLACE_APP_PASSWORD' \
+  --from-literal=migrator-username='REPLACE_MIGRATOR_USER' \
+  --from-literal=migrator-password='REPLACE_MIGRATOR_PASSWORD'
 ```
 
 The literal command is acceptable only for disposable local clusters because it can enter shell history. Use an external secret manager for shared environments.
