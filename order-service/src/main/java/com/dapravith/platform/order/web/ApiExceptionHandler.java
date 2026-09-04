@@ -16,7 +16,7 @@ import org.springframework.web.server.ServerWebInputException;
 @RestControllerAdvice
 public class ApiExceptionHandler {
   @ExceptionHandler(WebExchangeBindException.class)
-  ResponseEntity<Map<String, Object>> validationFailure(
+  public ResponseEntity<Map<String, Object>> validationFailure(
       WebExchangeBindException exception, ServerWebExchange exchange) {
     List<Violation> violations = exception.getFieldErrors().stream()
         .sorted(Comparator.comparing(error -> error.getField()))
@@ -37,7 +37,7 @@ public class ApiExceptionHandler {
   }
 
   @ExceptionHandler(ServerWebInputException.class)
-  ResponseEntity<Map<String, Object>> invalidRequest(
+  public ResponseEntity<Map<String, Object>> invalidRequest(
       ServerWebInputException exception, ServerWebExchange exchange) {
     Map<String, Object> problem = problem(
         HttpStatus.BAD_REQUEST,
