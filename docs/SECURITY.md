@@ -35,7 +35,7 @@ The service obtains `customerId` from `Jwt.getSubject()`. It never trusts a clie
 
 ### Input protection
 
-The order amount is required and must be at least `0.01`. The database adds a second `amount > 0` constraint.
+The order amount is required, must be between `0.01` and `1000000.00`, and may have at most two decimal places. Currency is required and restricted to uppercase `USD` or `KHR`. PostgreSQL enforces the positive amount, maximum amount, and supported currency rules again.
 
 ### Abuse protection
 
@@ -69,7 +69,7 @@ Production rules:
 
 ## 4. Secrets architecture
 
-The Helm chart references an existing Kubernetes Secret named `platform-database`; it does not create secret values.
+The Helm chart references an existing Kubernetes Secret named `platform-database`; it does not create secret values. The Secret has separate `app-username`, `app-password`, `migrator-username`, and `migrator-password` entries. The application role performs runtime data operations. The migrator role owns schema changes and must not be used for normal requests.
 
 Recommended production flow:
 
@@ -124,10 +124,10 @@ No business event publishing exists yet, so Kafka security is a prerequisite for
 
 | Threat | Current mitigation | Remaining work |
 | --- | --- | --- |
-| Forged token | Signature and issuer validation | Validate intended audience |
+| Forged token | Signature, issuer, and intended-audience validation | Test key rotation and production identity configuration |
 | Excessive requests | Redis rate limiting | Tune limits and add ingress protection |
-| Cross-user data access | JWT subject ownership filter | Add dedicated authorization integration tests |
-| Invalid amount | Bean Validation and database check | Define maximum and currency rules |
+| Cross-user data access | JWT subject ownership filter and authorization integration test | Add policy tests when more roles are introduced |
+| Invalid amount or currency | Bean Validation, problem details, and database checks | Implemented; extend supported currencies only through an approved product decision |
 | Container privilege | Non-root and restricted context | Admission policy enforcement |
 | Secret leakage | Secret reference, no prod value in chart | External secret manager and secret scanning |
 | Dependency vulnerability | Trivy image gate | Add SCA and patch SLAs |

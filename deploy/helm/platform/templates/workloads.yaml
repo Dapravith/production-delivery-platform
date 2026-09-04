@@ -30,6 +30,7 @@ spec:
           env:
             - { name: OIDC_ISSUER_URI, value: "{{ $.Values.config.oidcIssuerUri }}" }
             - { name: OIDC_JWK_SET_URI, value: "{{ $.Values.config.oidcJwkSetUri }}" }
+            - { name: OIDC_AUDIENCE, value: "{{ $.Values.config.oidcAudience }}" }
             {{- if eq $name "gateway" }}
             - { name: REDIS_HOST, value: "{{ $.Values.config.redisHost }}" }
             - { name: ORDER_SERVICE_URL, value: "http://order-service:8081" }
@@ -37,8 +38,11 @@ spec:
             - { name: R2DBC_URL, value: "{{ $.Values.config.r2dbcUrl }}" }
             - { name: JDBC_URL, value: "{{ $.Values.config.jdbcUrl }}" }
             - { name: KAFKA_BOOTSTRAP_SERVERS, value: "{{ $.Values.config.kafkaBootstrapServers }}" }
-            - { name: DB_USER, valueFrom: { secretKeyRef: { name: "{{ $.Values.secrets.existingSecret }}", key: username } } }
-            - { name: DB_PASSWORD, valueFrom: { secretKeyRef: { name: "{{ $.Values.secrets.existingSecret }}", key: password } } }
+            - { name: DB_APP_USER, valueFrom: { secretKeyRef: { name: "{{ $.Values.secrets.existingSecret }}", key: "{{ $.Values.secrets.appUsernameKey }}" } } }
+            - { name: DB_APP_PASSWORD, valueFrom: { secretKeyRef: { name: "{{ $.Values.secrets.existingSecret }}", key: "{{ $.Values.secrets.appPasswordKey }}" } } }
+            - { name: DB_APP_ROLE, value: "{{ $.Values.config.databaseAppRole }}" }
+            - { name: DB_MIGRATOR_USER, valueFrom: { secretKeyRef: { name: "{{ $.Values.secrets.existingSecret }}", key: "{{ $.Values.secrets.migratorUsernameKey }}" } } }
+            - { name: DB_MIGRATOR_PASSWORD, valueFrom: { secretKeyRef: { name: "{{ $.Values.secrets.existingSecret }}", key: "{{ $.Values.secrets.migratorPasswordKey }}" } } }
             {{- end }}
           resources:
             {{ toYaml $svc.resources | nindent 12 }}

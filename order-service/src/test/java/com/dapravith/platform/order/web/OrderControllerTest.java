@@ -27,7 +27,14 @@ class OrderControllerTest {
 
   @Test
   void listsOnlyAuthenticatedCustomersOrders() {
-    var order = new Order(UUID.randomUUID(), "customer-123", new BigDecimal("25.00"), "CREATED", Instant.now());
+    var order = new Order(
+        UUID.randomUUID(),
+        "customer-123",
+        new BigDecimal("25.00"),
+        "USD",
+        "CREATED",
+        Instant.now(),
+        0L);
     when(repository.findAllByCustomerIdOrderByCreatedAtDesc("customer-123")).thenReturn(Flux.just(order));
 
     StepVerifier.create(controller.all(jwt)).expectNext(order).verifyComplete();
@@ -38,10 +45,12 @@ class OrderControllerTest {
   void derivesCustomerIdentityFromJwtWhenCreatingOrder() {
     when(repository.save(any(Order.class))).thenAnswer(call -> Mono.just(call.getArgument(0)));
 
-    StepVerifier.create(controller.create(jwt, new OrderController.CreateOrder(new BigDecimal("10.50"))))
+    StepVerifier.create(controller.create(
+            jwt, new OrderController.CreateOrder(new BigDecimal("10.50"), "USD")))
         .assertNext(saved -> {
           assertThat(saved.customerId()).isEqualTo("customer-123");
           assertThat(saved.amount()).isEqualByComparingTo("10.50");
+          assertThat(saved.currency()).isEqualTo("USD");
           assertThat(saved.status()).isEqualTo("CREATED");
         }).verifyComplete();
 
@@ -54,9 +63,37 @@ class OrderControllerTest {
   void rejectsZeroOrderAmount() {
     try (var validatorFactory = Validation.buildDefaultValidatorFactory()) {
       var violations = validatorFactory.getValidator()
-          .validate(new OrderController.CreateOrder(BigDecimal.ZERO));
+          .validate(new OrderController.CreateOrder(BigDecimal.ZERO, "USD"));
       assertThat(violations).extracting(v -> v.getPropertyPath().toString())
           .containsExactly("amount");
+    }
+  }
+
+  @Test
+  void rejectsExcessiveAmountAndUnsupportedCurrency() {
+    try (var validatorFactory = Validation.buildDefaultValidatorFactory()) {
+      var violations = validatorFactory.getValidator().validate(
+          new OrderController.CreateOrder(new BigDecimal("1000000.01"), "EUR"));
+
+      assertThat(violations).extracting(v -> v.getPropertyPath().toString())
+          .containsExactlyInAnyOrder("amount", "currency");
+    }
+  }
+
+  @Test
+  void rejectsNegativeAndHighPrecisionAmounts() {
+    try (var validatorFactory = Validation.buildDefaultValidatorFactory()) {
+      var validator = validatorFactory.getValidator();
+
+      var negative = validator.validate(
+          new OrderController.CreateOrder(new BigDecimal("-1.00"), "USD"));
+      var highPrecision = validator.validate(
+          new OrderController.CreateOrder(new BigDecimal("10.123"), "KHR"));
+
+      assertThat(negative).extracting(v -> v.getPropertyPath().toString())
+          .contains("amount");
+      assertThat(highPrecision).extracting(v -> v.getPropertyPath().toString())
+          .contains("amount");
     }
   }
 }

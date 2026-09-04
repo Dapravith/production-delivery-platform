@@ -27,7 +27,51 @@
       "directAccessGrantsEnabled": true,
       "standardFlowEnabled": false,
       "serviceAccountsEnabled": false,
-      "defaultClientScopes": ["orders.read", "orders.write"]
+      "defaultClientScopes": ["basic", "profile", "orders.read", "orders.write"],
+      "protocolMappers": [
+        {
+          "name": "subject",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-sub-mapper",
+          "config": {
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
+          }
+        },
+        {
+          "name": "platform-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.custom.audience": "platform-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "wrong-audience-cli",
+      "name": "Negative-test CLI without API audience",
+      "protocol": "openid-connect",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "defaultClientScopes": ["basic", "profile", "orders.read", "orders.write"],
+      "protocolMappers": [
+        {
+          "name": "subject",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-sub-mapper",
+          "config": {
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
+          }
+        }
+      ]
     }
   ],
   "users": [

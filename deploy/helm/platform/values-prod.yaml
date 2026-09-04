@@ -11,13 +11,19 @@ order:
 config:
   oidcIssuerUri: https://identity.example.com/realms/platform
   oidcJwkSetUri: http://keycloak.security.svc:8080/realms/platform/protocol/openid-connect/certs
+  oidcAudience: platform-api
   redisHost: redis-master.data.svc
   r2dbcUrl: r2dbc:postgresql://postgresql.data.svc:5432/platform
   jdbcUrl: jdbc:postgresql://postgresql.data.svc:5432/platform
   kafkaBootstrapServers: kafka.data.svc:9092
+  databaseAppRole: platform_app
 
 secrets:
   existingSecret: platform-database
+  appUsernameKey: app-username
+  appPasswordKey: app-password
+  migratorUsernameKey: migrator-username
+  migratorPasswordKey: migrator-password
 
 serviceMonitor:
   additionalLabels:

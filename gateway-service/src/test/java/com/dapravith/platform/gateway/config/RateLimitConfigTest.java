@@ -27,4 +27,14 @@ class RateLimitConfigTest {
     StepVerifier.create(config.principalKeyResolver().resolve(exchange))
         .expectNext("anonymous").verifyComplete();
   }
+
+  @Test
+  void fallsBackToAnonymousKeyWhenPrincipalNameIsNull() {
+    Principal principal = () -> null;
+    var exchange = MockServerWebExchange.from(MockServerHttpRequest.get("/api/orders").build())
+        .mutate().principal(Mono.just(principal)).build();
+
+    StepVerifier.create(config.principalKeyResolver().resolve(exchange))
+        .expectNext("anonymous").verifyComplete();
+  }
 }

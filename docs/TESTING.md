@@ -9,7 +9,7 @@ No screenshot can prove that a distributed system is bug-free. Evidence must com
 | Layer | Current coverage | Command |
 | --- | --- | --- |
 | Static configuration | XML, YAML, JSON, shell syntax, Git whitespace | Creation workspace checks |
-| Unit | Rate-limit key, order ownership, amount validation | `mvn clean verify` |
+| Unit | Rate-limit key, JWT issuer/audience, order ownership, amount and currency validation | `mvn clean verify` |
 | Local integration | Containers and dependency health | `docker compose up --build --wait` |
 | API smoke | JWT, 401, 400, create/read, customer isolation | `./scripts/smoke-test.sh` |
 | Helm | Lint, render, expected resource counts | `./scripts/verify.sh` |
@@ -97,18 +97,21 @@ Acceptance:
 
 ## 7. Negative security tests
 
-Add automated cases for:
+Automated coverage includes:
 
 - Missing token
 - Expired token
-- Wrong issuer
-- Wrong audience
+- Wrong issuer and missing API audience at the JWT validator
 - Missing read scope
 - Missing write scope
 - Malformed JSON
-- Negative, zero, excessive, and high-precision amounts
+- Zero and excessive amounts
+- Negative and high-precision amounts
+- Lowercase and unsupported currencies
+- Runtime database identity cannot create schema objects
 - Attempted cross-customer access
-- Rate-limit exhaustion
+
+Still add a case for rate-limit exhaustion under controlled load.
 
 ## 8. Load test plan
 

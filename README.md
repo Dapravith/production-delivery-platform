@@ -92,9 +92,11 @@ Run the complete local smoke test:
 The smoke test builds the images, starts the complete Compose stack, obtains Keycloak tokens, and verifies:
 
 - Anonymous requests return `401`
-- Invalid order amounts return `400`
+- Tokens with the wrong audience return `401`
+- Invalid amounts or unsupported currencies return RFC 9457-style problem details with `400`
 - A valid order can be created and retrieved
 - One authenticated customer cannot read another customer's orders
+- The runtime database role can read and write orders but cannot create tables
 
 The stack is stopped after the test. Use `SMOKE_KEEP_RUNNING=true ./scripts/smoke-test.sh` to leave it running for inspection.
 
