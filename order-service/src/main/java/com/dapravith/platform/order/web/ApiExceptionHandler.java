@@ -1,11 +1,11 @@
 package com.dapravith.platform.order.web;
 
-import java.net.URI;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,11 +15,8 @@ import org.springframework.web.server.ServerWebInputException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
-  private static final URI VALIDATION_TYPE = URI.create("urn:problem-type:validation");
-  private static final URI INVALID_REQUEST_TYPE = URI.create("urn:problem-type:invalid-request");
-
   @ExceptionHandler(WebExchangeBindException.class)
-  ResponseEntity<ProblemDetail> validationFailure(
+  ResponseEntity<Map<String, Object>> validationFailure(
       WebExchangeBindException exception, ServerWebExchange exchange) {
     List<Violation> violations = exception.getFieldErrors().stream()
         .sorted(Comparator.comparing(error -> error.getField()))
@@ -28,23 +25,23 @@ public class ApiExceptionHandler {
             error.getDefaultMessage() == null ? "is invalid" : error.getDefaultMessage()))
         .toList();
 
-    ProblemDetail problem = problem(
+    Map<String, Object> problem = problem(
         HttpStatus.BAD_REQUEST,
-        VALIDATION_TYPE,
+        "urn:problem-type:validation",
         "Request validation failed",
         "One or more request fields are invalid.",
         "validation_failed",
         exchange);
-    problem.setProperty("violations", violations);
+    problem.put("violations", violations);
     return response(problem);
   }
 
   @ExceptionHandler(ServerWebInputException.class)
-  ResponseEntity<ProblemDetail> invalidRequest(
+  ResponseEntity<Map<String, Object>> invalidRequest(
       ServerWebInputException exception, ServerWebExchange exchange) {
-    ProblemDetail problem = problem(
+    Map<String, Object> problem = problem(
         HttpStatus.BAD_REQUEST,
-        INVALID_REQUEST_TYPE,
+        "urn:problem-type:invalid-request",
         "Invalid request",
         "The request body or parameters could not be read.",
         "invalid_request",
@@ -52,23 +49,25 @@ public class ApiExceptionHandler {
     return response(problem);
   }
 
-  private ProblemDetail problem(
+  private Map<String, Object> problem(
       HttpStatus status,
-      URI type,
+      String type,
       String title,
       String detail,
       String code,
       ServerWebExchange exchange) {
-    ProblemDetail problem = ProblemDetail.forStatusAndDetail(status, detail);
-    problem.setType(type);
-    problem.setTitle(title);
-    problem.setInstance(URI.create(exchange.getRequest().getPath().value()));
-    problem.setProperty("code", code);
+    Map<String, Object> problem = new LinkedHashMap<>();
+    problem.put("type", type);
+    problem.put("title", title);
+    problem.put("status", status.value());
+    problem.put("detail", detail);
+    problem.put("instance", exchange.getRequest().getPath().value());
+    problem.put("code", code);
     return problem;
   }
 
-  private ResponseEntity<ProblemDetail> response(ProblemDetail problem) {
-    return ResponseEntity.status(problem.getStatus())
+  private ResponseEntity<Map<String, Object>> response(Map<String, Object> problem) {
+    return ResponseEntity.status((Integer) problem.get("status"))
         .contentType(MediaType.APPLICATION_PROBLEM_JSON)
         .body(problem);
   }
