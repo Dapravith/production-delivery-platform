@@ -10,10 +10,17 @@ compose=(docker compose --project-name "$compose_project")
 invalid_body="$(mktemp)"
 
 cleanup() {
+  local status=$?
   rm -f "$invalid_body"
+  if (( status != 0 )); then
+    echo "Smoke test failed; capturing container state and logs." >&2
+    "${compose[@]}" ps --all >&2 || true
+    "${compose[@]}" logs --no-color --tail=200 gateway-service order-service keycloak postgres redis kafka >&2 || true
+  fi
   if [[ "${SMOKE_KEEP_RUNNING:-false}" != "true" ]]; then
     "${compose[@]}" down --volumes --remove-orphans
   fi
+  return "$status"
 }
 trap cleanup EXIT
 
