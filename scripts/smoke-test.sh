@@ -15,7 +15,7 @@ cleanup() {
   if (( status != 0 )); then
     echo "Smoke test failed; capturing container state and logs." >&2
     "${compose[@]}" ps --all >&2 || true
-    "${compose[@]}" logs --no-color --tail=200 gateway-service order-service keycloak postgres redis kafka >&2 || true
+    "${compose[@]}" logs --no-color --tail=1000 gateway-service order-service keycloak postgres redis kafka >&2 || true
   fi
   if [[ "${SMOKE_KEEP_RUNNING:-false}" != "true" ]]; then
     "${compose[@]}" down --volumes --remove-orphans
@@ -58,12 +58,15 @@ wrong_audience_status="$(curl --silent --output /dev/null --write-out '%{http_co
   http://localhost:8080/api/orders)"
 [[ "$wrong_audience_status" == "401" ]] || { echo "Expected wrong audience to return 401, got $wrong_audience_status" >&2; exit 1; }
 
-invalid_status="$(curl --silent --output /dev/null --write-out '%{http_code}' \
+invalid_status="$(curl --silent --output "$invalid_body" --write-out '%{http_code}' \
   -H "Authorization: Bearer $access_token" \
   -H 'Content-Type: application/json' \
   -d '{"amount":0,"currency":"usd"}' \
   http://localhost:8080/api/orders)"
-[[ "$invalid_status" == "400" ]] || { echo "Expected invalid order to return 400, got $invalid_status" >&2; exit 1; }
+[[ "$invalid_status" == "400" ]] || {
+  echo "Expected invalid order to return 400, got $invalid_status. Response: $(<"$invalid_body")" >&2
+  exit 1
+}
 
 problem_status="$(curl --silent --show-error --output "$invalid_body" --write-out '%{http_code}' \
   -H "Authorization: Bearer $access_token" \
