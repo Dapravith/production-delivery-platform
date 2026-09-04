@@ -52,6 +52,7 @@ Read the complete design in [System architecture](docs/ARCHITECTURE.md).
 ├── deploy/argocd/                Argo CD Application manifest
 ├── scripts/                      Verification and smoke-test automation
 ├── docs/                         Architecture and operating documentation
+├── AGENTS.md                     AI-assisted engineering working agreement
 ├── docker-compose.yml            Complete local runtime topology
 ├── Jenkinsfile                   Continuous delivery pipeline
 └── pom.xml                       Java 21 multi-module Maven build
@@ -109,6 +110,7 @@ The stack is stopped after the test. Use `SMOKE_KEEP_RUNNING=true ./scripts/smok
 | [Environment promotion](docs/ENVIRONMENT_PROMOTION.md) | Development, staging, UAT, production, and hypercare gates |
 | [Project closure](docs/PROJECT_CLOSURE.md) | Handover, closeout evidence, and final acceptance checklist |
 | [System architecture](docs/ARCHITECTURE.md) | Components, request paths, trust boundaries, scaling, and data flow |
+| [AI engineering playbook](docs/AI_ENGINEERING_PLAYBOOK.md) | Senior AI-assisted workflow and full-stack path from intent to production feedback |
 | [Implementation guide](docs/IMPLEMENTATION_GUIDE.md) | Step-by-step path from local development to Kubernetes |
 | [CI/CD and GitOps](docs/CI_CD_GITOPS.md) | Jenkins stages, immutable images, Helm, Argo CD, promotion, and rollback |
 | [Security guide](docs/SECURITY.md) | Authentication, authorization, secrets, containers, and production gaps |
