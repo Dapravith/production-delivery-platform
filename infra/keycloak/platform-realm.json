@@ -27,7 +27,7 @@
       "directAccessGrantsEnabled": true,
       "standardFlowEnabled": false,
       "serviceAccountsEnabled": false,
-      "defaultClientScopes": ["orders.read", "orders.write"],
+      "defaultClientScopes": ["basic", "profile", "orders.read", "orders.write"],
       "protocolMappers": [
         {
           "name": "platform-api-audience",
@@ -51,7 +51,7 @@
       "directAccessGrantsEnabled": true,
       "standardFlowEnabled": false,
       "serviceAccountsEnabled": false,
-      "defaultClientScopes": ["orders.read", "orders.write"]
+      "defaultClientScopes": ["basic", "profile", "orders.read", "orders.write"]
     }
   ],
   "users": [
