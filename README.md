@@ -101,6 +101,13 @@ The stack is stopped after the test. Use `SMOKE_KEEP_RUNNING=true ./scripts/smok
 
 | Document | Purpose |
 | --- | --- |
+| [Product delivery plan](docs/PRODUCT_DELIVERY_PLAN.md) | Full lifecycle, scope, environments, stage gates, and completion rules |
+| [Agile workflow](docs/AGILE_WORKFLOW.md) | One-week sprint process, Ready/Done rules, reviews, and metrics |
+| [Product backlog](docs/BACKLOG.md) | Prioritized epics and traceable `PDP-###` work items |
+| [Sprint plan](docs/SPRINT_PLAN.md) | Weekly goals from foundation through production closure |
+| [Progress tracker](docs/PROGRESS.md) | Current status, blockers, risks, decisions, and weekly update template |
+| [Environment promotion](docs/ENVIRONMENT_PROMOTION.md) | Development, staging, UAT, production, and hypercare gates |
+| [Project closure](docs/PROJECT_CLOSURE.md) | Handover, closeout evidence, and final acceptance checklist |
 | [System architecture](docs/ARCHITECTURE.md) | Components, request paths, trust boundaries, scaling, and data flow |
 | [Implementation guide](docs/IMPLEMENTATION_GUIDE.md) | Step-by-step path from local development to Kubernetes |
 | [CI/CD and GitOps](docs/CI_CD_GITOPS.md) | Jenkins stages, immutable images, Helm, Argo CD, promotion, and rollback |

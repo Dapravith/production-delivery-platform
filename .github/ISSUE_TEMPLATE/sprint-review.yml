@@ -1,0 +1,57 @@
+name: Sprint review
+description: Record a weekly sprint result, evidence, blockers, and retrospective action.
+title: "[SPRINT S##] Review"
+labels: []
+projects: []
+assignees: []
+body:
+  - type: input
+    id: dates
+    attributes:
+      label: Sprint dates
+      placeholder: YYYY-MM-DD to YYYY-MM-DD
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Sprint goal and result
+      placeholder: Goal, then Achieved / Partially achieved / Not achieved
+    validations:
+      required: true
+  - type: textarea
+    id: accepted
+    attributes:
+      label: Accepted backlog
+      placeholder: PDP IDs and links
+    validations:
+      required: true
+  - type: textarea
+    id: rollover
+    attributes:
+      label: Returned or blocked backlog
+      placeholder: PDP IDs, reason, blocker owner, and next action
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      placeholder: Commits, tests, images, deployments, dashboards, or approvals
+    validations:
+      required: true
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Sprint metrics
+      value: |
+        Planned items:
+        Accepted items:
+        Blocked items:
+        Defects opened:
+        Defects closed:
+  - type: textarea
+    id: retrospective
+    attributes:
+      label: Retrospective improvement
+      description: Choose one improvement to test in the next sprint.
+    validations:
+      required: true
