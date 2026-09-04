@@ -17,7 +17,8 @@ spring:
     routes:
       - id: order-service
         uri: ${ORDER_SERVICE_URL:http://order-service:8081}
-        predicates: [Path=/api/orders,/api/orders/**]
+        predicates:
+          - Path=/api/orders,/api/orders/**
         filters:
           - name: RequestRateLimiter
             args:
