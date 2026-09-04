@@ -30,6 +30,15 @@
       "defaultClientScopes": ["basic", "profile", "orders.read", "orders.write"],
       "protocolMappers": [
         {
+          "name": "subject",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-sub-mapper",
+          "config": {
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
+          }
+        },
+        {
           "name": "platform-api-audience",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-audience-mapper",
@@ -51,7 +60,18 @@
       "directAccessGrantsEnabled": true,
       "standardFlowEnabled": false,
       "serviceAccountsEnabled": false,
-      "defaultClientScopes": ["basic", "profile", "orders.read", "orders.write"]
+      "defaultClientScopes": ["basic", "profile", "orders.read", "orders.write"],
+      "protocolMappers": [
+        {
+          "name": "subject",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-sub-mapper",
+          "config": {
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
+          }
+        }
+      ]
     }
   ],
   "users": [
