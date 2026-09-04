@@ -61,9 +61,9 @@ class SecurityConfigWebTest {
   }
 
   @RestController
-  static class ProbeController {
+  public static class ProbeController {
     @GetMapping("/probe")
-    Mono<String> probe() {
+    public Mono<String> probe() {
       return Mono.just("ok");
     }
   }
