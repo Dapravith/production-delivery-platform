@@ -1,0 +1,33 @@
+server:
+  port: 8081
+  shutdown: graceful
+spring:
+  application.name: order-service
+  lifecycle.timeout-per-shutdown-phase: 20s
+  security.oauth2.resourceserver.jwt:
+    issuer-uri: ${OIDC_ISSUER_URI:http://localhost:8180/realms/platform}
+    jwk-set-uri: ${OIDC_JWK_SET_URI:http://keycloak:8080/realms/platform/protocol/openid-connect/certs}
+  r2dbc.url: ${R2DBC_URL:r2dbc:postgresql://postgres:5432/platform}
+  r2dbc.username: ${DB_USER:platform}
+  r2dbc.password: ${DB_PASSWORD:platform}
+  r2dbc.pool:
+    enabled: true
+    initial-size: 2
+    max-size: ${DB_POOL_MAX_SIZE:20}
+    max-idle-time: 30m
+  flyway:
+    url: ${JDBC_URL:jdbc:postgresql://postgres:5432/platform}
+    user: ${DB_USER:platform}
+    password: ${DB_PASSWORD:platform}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    producer:
+      acks: all
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+  webflux.problemdetails.enabled: true
+management:
+  endpoints.web.exposure.include: health,info,prometheus
+  endpoint.health.probes.enabled: true
+  metrics.tags.application: ${spring.application.name}

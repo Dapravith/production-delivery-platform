@@ -1,0 +1,30 @@
+server:
+  port: 8080
+  shutdown: graceful
+spring:
+  application.name: gateway-service
+  lifecycle.timeout-per-shutdown-phase: 20s
+  security.oauth2.resourceserver.jwt:
+    issuer-uri: ${OIDC_ISSUER_URI:http://localhost:8180/realms/platform}
+    jwk-set-uri: ${OIDC_JWK_SET_URI:http://keycloak:8080/realms/platform/protocol/openid-connect/certs}
+  data.redis.host: ${REDIS_HOST:redis}
+  cloud.gateway:
+    httpclient:
+      connect-timeout: 3000
+      response-timeout: 10s
+    default-filters:
+      - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+    routes:
+      - id: order-service
+        uri: ${ORDER_SERVICE_URL:http://order-service:8081}
+        predicates: [Path=/api/orders,/api/orders/**]
+        filters:
+          - name: RequestRateLimiter
+            args:
+              redis-rate-limiter.replenishRate: 20
+              redis-rate-limiter.burstCapacity: 40
+              key-resolver: "#{@principalKeyResolver}"
+management:
+  endpoints.web.exposure.include: health,info,prometheus
+  endpoint.health.probes.enabled: true
+  metrics.tags.application: ${spring.application.name}
