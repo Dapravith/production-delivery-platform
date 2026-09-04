@@ -3,6 +3,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.Table;
 @Table("orders")
 public record Order(
@@ -11,4 +12,5 @@ public record Order(
     BigDecimal amount,
     String currency,
     String status,
-    Instant createdAt) {}
+    Instant createdAt,
+    @Version Long version) {}
