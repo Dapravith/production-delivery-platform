@@ -36,7 +36,7 @@ gantt
 
 | Sprint | Dates | Goal | Planned backlog | Exit evidence | Status |
 | --- | --- | --- | --- | --- | --- |
-| S01 | Sep 7–13 | Prove clean build and local runtime | PDP-010, 011, 030, 040 | Maven, smoke, Jenkins, Helm results | Planned |
+| S01 | Sep 7–13 | Prove clean build and local runtime | PDP-010, 011, 030, 040 | Maven, smoke, Jenkins, Helm results | Active; Jenkins blocked |
 | S02 | Sep 14–20 | Complete API security tests | PDP-012, 013, 014 | Negative auth and validation report | Planned |
 | S03 | Sep 21–27 | Improve API and DB operational safety | PDP-015, 016 | Permission and error-contract tests | Planned |
 | S04 | Sep 28–Oct 4 | Publish reliable order events | PDP-020, 021, 022 | Schema, outbox, Kafka evidence | Planned |
@@ -65,6 +65,8 @@ Prove that the existing foundation builds, runs, and can be evaluated by Jenkins
 - [ ] PDP-040: Helm lint and resource-count verification
 
 ### Acceptance evidence
+
+As of 2026-09-11, [PR #13 hosted verification](VERIFICATION.md) provides baseline Java, smoke, and Helm evidence. GitHub Actions is not Jenkins acceptance. Checkboxes remain unaccepted until human review and the required Jenkins runs are complete.
 
 - Tool version output
 - Maven JUnit reports

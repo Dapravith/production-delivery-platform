@@ -37,16 +37,20 @@ Recommended policy:
 | Stage | Purpose | Failure response |
 | --- | --- | --- |
 | Checkout | Retrieve exact source and calculate SHA tag | Stop; repository or credential issue |
-| Test | Compile and execute Maven tests | Fix code or tests; never skip |
+| Verify source and manifests | Check Java 21/Helm 3, script regressions, clean Maven tests, Compose, and both Helm profiles | Fix code or configuration; never skip |
+| Authenticated smoke test | Build disposable local stack and exercise real Keycloak/PostgreSQL paths | Preserve evidence; no image publication after failure |
 | Build images | Produce gateway and order images | Inspect Docker context and dependency download |
 | Security scan | Block critical known vulnerabilities | Upgrade or document a time-bound exception |
 | Push | Publish images from `main` | Check registry credentials and network |
-| Validate Helm | Lint and render the chart | Fix templates or values |
 | Update GitOps | Promote image tags | Currently a placeholder; implement before automation claim |
 
 ## 4. Required Jenkins configuration
 
-Create a Linux agent label with Java 21, Maven, Docker, Helm, Trivy, and Git. Prefer disposable agents with no long-lived application secrets.
+Create a Linux agent label with Java 21, Maven 3.9+, Docker with Compose v2, Helm 3, Trivy, Git, curl, and Python 3. Prefer disposable agents with no long-lived application secrets. The Jenkinsfile still uses `agent any`; ensure every eligible agent meets these prerequisites or configure a prepared label before running it. Local smoke ports must be free.
+
+Jenkins and GitHub Actions share `scripts/ci-verify.sh`. It retains full source SHA, tool versions, phase logs, and exit codes without allowing `tee` to hide a failure. Helm validation runs before registry publication and checks default and production resource counts. Jenkins retains 30 build records and artifacts for the most recent 15 builds; GitHub artifacts expire after 14 days. Export accepted evidence to your approved release store before expiration. Never archive real production logs or environment dumps here.
+
+PDP-030 still requires a real Jenkins success and deliberate-failure run. Hosted GitHub verification is useful supporting evidence, not a substitute for Jenkins acceptance. For the negative test, use a disposable PR branch with an intentionally wrong resource-count assertion, confirm publishing is skipped and artifacts survive, then discard that test branch without merging it.
 
 Required credential:
 

@@ -8,6 +8,7 @@ No screenshot can prove that a distributed system is bug-free. Evidence must com
 
 | Layer | Current coverage | Command |
 | --- | --- | --- |
+| Delivery scripts | Exit-code propagation, evidence retention, Helm counts/version, safe Compose reuse refusal | `python3 scripts/test_delivery.py` (fake CLIs, not runtime proof) |
 | Static configuration | XML, YAML, JSON, shell syntax, Git whitespace | Creation workspace checks |
 | Unit | Rate-limit key, JWT issuer/audience, order ownership, amount and currency validation | `mvn clean verify` |
 | Local integration | Containers and dependency health | `docker compose up --build --wait` |
@@ -49,7 +50,7 @@ Acceptance:
 - Created orders derive ownership from the JWT subject.
 - Zero-value orders violate Bean Validation.
 
-Add WebTestClient integration tests for full Spring Security filter behavior as the next test improvement.
+`SecurityConfigWebTest` and `OrderSecurityWebTest` exercise the Spring Security filter path with WebTestClient, including missing/invalid tokens, scope boundaries, validation, and customer isolation. JWT validator tests cover issuer, timestamps, and intended audience. The Compose test supplies real Keycloak-issued tokens rather than mocked JWTs.
 
 ## 5. Smoke-test behavior
 
@@ -158,4 +159,6 @@ Never include passwords, access tokens, registry credentials, private URLs, or p
 
 ## 11. Current verified status
 
-Static format and archive checks passed in the creation environment. The creation environment did not include Java 21 build tools, Maven, Docker, or Helm, so it could not produce honest runtime-pass evidence. Run the repository scripts on a prepared Jenkins agent or workstation and attach those results before merging.
+The 4 September hosted verification passed 25 Java tests, Helm checks, and the real Compose smoke test at `6ce466e1503e67796b120306b2295c219088cbc1`. See [Verification record](VERIFICATION.md) for the exact run and current follow-up evidence. A passing GitHub run is not Jenkins or Kubernetes deployment evidence. Human approval remains required.
+
+The shared CI wrapper retains phase logs, source SHA, tracked-change count, tool versions, and exit codes in `build/evidence/`. The workflow also uploads JUnit XML on failure. Only synthetic local-stack data belongs in these artifacts; do not use this path for production logs or secrets.

@@ -1,12 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 for tool in docker curl python3; do
   command -v "$tool" >/dev/null || { echo "Missing required tool: $tool" >&2; exit 1; }
 done
 
-compose_project="${COMPOSE_PROJECT_NAME:-pdp-smoke}"
-compose=(docker compose --project-name "$compose_project")
+compose_project="${COMPOSE_PROJECT_NAME:-pdp-smoke-$(date +%s)-$$}"
+[[ "$compose_project" =~ ^[a-z0-9][a-z0-9_-]*$ ]] || { echo "Invalid Compose project name" >&2; exit 1; }
+# Never reuse a developer's stack: the EXIT trap deletes this test's volumes.
+for resource in container volume; do
+  options=()
+  [[ "$resource" != container ]] || options=(--all)
+  existing="$(docker "$resource" ls "${options[@]}" --quiet --filter "label=com.docker.compose.project=$compose_project")"
+  if [[ -n "$existing" ]]; then
+    echo "Refusing to reuse Compose project $compose_project: existing $resource resources" >&2
+    exit 1
+  fi
+done
+compose=(docker compose --file docker-compose.yml --env-file /dev/null --project-name "$compose_project")
+echo "Disposable Compose project: $compose_project"
 invalid_body="$(mktemp)"
 
 cleanup() {

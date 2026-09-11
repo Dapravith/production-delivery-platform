@@ -1,6 +1,6 @@
 # Product backlog
 
-Last updated: 2026-09-04
+Last updated: 2026-09-11
 
 Statuses follow [Agile workflow](AGILE_WORKFLOW.md). Sprint assignments follow [Sprint plan](SPRINT_PLAN.md).
 
@@ -37,13 +37,13 @@ Statuses follow [Agile workflow](AGILE_WORKFLOW.md). Sprint assignments follow [
 
 | ID | Backlog item | Priority | Size | Sprint | Status | Acceptance evidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| PDP-010 | Build gateway and order modules on Java 21 | P0 | M | S01 | In progress | Clean `mvn verify` report |
-| PDP-011 | Run the complete Compose smoke test | P0 | M | S01 | In progress | Successful smoke-test log |
-| PDP-012 | Add WebTestClient security integration tests | P1 | M | S02 | Ready | 401, 403, wrong issuer, and scope tests |
-| PDP-013 | Validate JWT audience | P0 | M | S02 | Ready | Wrong audience rejected |
-| PDP-014 | Add maximum amount and currency rules | P1 | S | S02 | Ready | Validation tests and API response |
-| PDP-015 | Separate Flyway and runtime DB permissions | P1 | M | S03 | Backlog | Two identities and permission test |
-| PDP-016 | Add API problem-details error contract | P1 | M | S03 | Backlog | Contract tests and examples |
+| PDP-010 | Build gateway and order modules on Java 21 | P0 | M | S01 | In review | [25 passing tests; human approval pending](VERIFICATION.md) |
+| PDP-011 | Run the complete Compose smoke test | P0 | M | S01 | In review | [Baseline passed; follow-up verification recorded separately](VERIFICATION.md) |
+| PDP-012 | Add WebTestClient security integration tests | P1 | M | S02 | In review | [Negative authentication and scope tests](VERIFICATION.md) |
+| PDP-013 | Validate JWT audience | P0 | M | S02 | In review | [Wrong audience rejected in tests and smoke](VERIFICATION.md) |
+| PDP-014 | Add maximum amount and currency rules | P1 | S | S02 | In review | [Validation tests and smoke evidence](VERIFICATION.md) |
+| PDP-015 | Separate Flyway and runtime DB permissions | P1 | M | S03 | In review | [Runtime DB permission smoke evidence](VERIFICATION.md) |
+| PDP-016 | Add API problem-details error contract | P1 | M | S03 | In review | [Problem-details contract tests](VERIFICATION.md) |
 
 ## E3: Event-driven integration
 
@@ -59,7 +59,7 @@ Statuses follow [Agile workflow](AGILE_WORKFLOW.md). Sprint assignments follow [
 
 | ID | Backlog item | Priority | Size | Sprint | Status | Acceptance evidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| PDP-030 | Run Jenkins PR quality gates | P0 | M | S01 | Ready | Successful and deliberately failed runs |
+| PDP-030 | Run Jenkins PR quality gates | P0 | M | S01 | Blocked | Real Jenkins success and deliberate-failure runs required; shared evidence capture implemented |
 | PDP-031 | Configure registry and SHA image publishing | P0 | M | S05 | Backlog | Tags and immutable digests |
 | PDP-032 | Add dependency and secret scanning | P1 | M | S05 | Backlog | Archived reports and enforced threshold |
 | PDP-033 | Generate SBOM and provenance | P1 | M | S06 | Backlog | SBOM and attestation artifacts |
@@ -70,7 +70,7 @@ Statuses follow [Agile workflow](AGILE_WORKFLOW.md). Sprint assignments follow [
 
 | ID | Backlog item | Priority | Size | Sprint | Status | Acceptance evidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| PDP-040 | Lint and render Helm chart on Helm 3 | P0 | S | S01 | In progress | `verify.sh` success |
+| PDP-040 | Lint and render Helm chart on Helm 3 | P0 | S | S01 | In review | [Helm 3 checks and resource counts](VERIFICATION.md) |
 | PDP-041 | Deploy to a development Kubernetes cluster | P0 | L | S07 | Backlog | Healthy deployments and API test |
 | PDP-042 | Add TLS ingress and DNS | P0 | M | S07 | Backlog | Valid certificate and HTTPS test |
 | PDP-043 | Add external secret synchronization | P0 | M | S07 | Backlog | Secret rotates without Git value |
@@ -118,3 +118,4 @@ Statuses follow [Agile workflow](AGILE_WORKFLOW.md). Sprint assignments follow [
 | Date | Change | Reason |
 | --- | --- | --- |
 | 2026-09-04 | Initial full-lifecycle backlog created | Establish evidence-based path from planning to closure |
+| 2026-09-11 | Reconciled PR #13 verification with eight items In review; PDP-030 Blocked | Hosted verification is available, but human acceptance and real Jenkins evidence are not |

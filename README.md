@@ -98,7 +98,9 @@ The smoke test builds the images, starts the complete Compose stack, obtains Key
 - One authenticated customer cannot read another customer's orders
 - The runtime database role can read and write orders but cannot create tables
 
-The stack is stopped after the test. Use `SMOKE_KEEP_RUNNING=true ./scripts/smoke-test.sh` to leave it running for inspection.
+The smoke test uses a unique disposable Compose project, refuses existing containers or volumes under a requested project name, and removes only its own test volumes afterwards. It prints the project name for inspection. Use `SMOKE_KEEP_RUNNING=true ./scripts/smoke-test.sh` to leave it running. Published demo ports bind only to `127.0.0.1`; do not expose the public demo credentials to a shared network.
+
+For retained CI evidence, run `bash scripts/ci-verify.sh verify` followed by `bash scripts/ci-verify.sh smoke`. Logs, source SHA, tool versions, and exit codes are stored in ignored `build/evidence/`; JUnit XML remains in each module's `target/surefire-reports/`. GitHub Actions uploads these files for 14 days, including failed-run diagnostics. Jenkins archives them before workspace cleanup. Use only synthetic local test data; this is not a production-safe smoke test.
 
 ## Documentation map
 
