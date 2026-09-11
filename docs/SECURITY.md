@@ -60,6 +60,8 @@ These are demonstration defaults. Set production limits from measured traffic an
 
 `infra/keycloak/platform-realm.json` contains development credentials so the smoke test can run without manual setup. These credentials are public and unsafe for any shared environment.
 
+The local Compose stack pins Keycloak 26.7.3, following the [31 August 2026 security release](https://www.keycloak.org/2026/08/keycloak-2673-released). All published demo ports bind to `127.0.0.1`. Smoke tests reject pre-existing Compose containers and volumes before installing destructive cleanup. These are local-test safeguards, not production identity or network controls. Upgrading an existing shared Keycloak deployment still needs its own database backup, migration review, and acceptance tests.
+
 Production rules:
 
 - Do not import the local demo users.

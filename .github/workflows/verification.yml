@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "feat/**"
+      - "fix/**"
   pull_request:
 
 permissions:
@@ -15,7 +16,7 @@ concurrency:
 
 jobs:
   application-and-platform:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - name: Check out source
@@ -28,16 +29,24 @@ jobs:
           java-version: "21"
           cache: maven
 
-      - name: Record tool versions
-        run: |
-          java -version
-          mvn --version
-          docker --version
-          docker compose version
-          helm version --short
+      - name: Configure Helm 3
+        uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112 # v4.3.0
+        with:
+          version: v3.21.4
 
       - name: Run unit and manifest verification
-        run: ./scripts/verify.sh
+        run: bash scripts/ci-verify.sh verify
 
       - name: Run authenticated runtime smoke test
-        run: ./scripts/smoke-test.sh
+        run: bash scripts/ci-verify.sh smoke
+
+      - name: Retain verification evidence even after failure
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: verification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            build/evidence/
+            **/target/surefire-reports/*.xml
+          retention-days: 14
+          if-no-files-found: error
