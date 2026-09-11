@@ -25,7 +25,17 @@ Branch: `fix/s01-verification-evidence`. Scope: PDP-011, PDP-030, PDP-040 and ev
 - Share verification wrappers between GitHub Actions and Jenkins; retain logs, full commit metadata, exit codes, and JUnit reports, including failure evidence.
 - Exercise script control flow with seven standard-library tests using mocked CLIs. These do not replace application runtime tests or Jenkins acceptance.
 
-Follow-up hosted verification: **pending**. Do not reuse the baseline run as proof of the changed Keycloak image or delivery scripts.
+Follow-up hosted verification: **passed on 2026-09-11**.
+
+- Full tested source commit: `b7488934c1ae9704870cefa05158929aa007f4cf`.
+- [Successful push run](https://github.com/Dapravith/production-delivery-platform/actions/runs/34554391806) and [PR integration run](https://github.com/Dapravith/production-delivery-platform/actions/runs/34554393328).
+- All 25 application tests and seven mocked-CLI delivery-script regression tests passed.
+- Both Helm profiles passed lint and rendered 2 Deployments, 2 Services, 2 HPAs, 2 PDBs, and 1 ServiceMonitor each. All published Compose ports passed the loopback-only check.
+- The real authenticated smoke test passed with the updated Keycloak 26.7.3 Compose stack, including negative authentication/audience cases, input validation, database permissions, and customer isolation.
+- [Archived verification evidence](https://github.com/Dapravith/production-delivery-platform/actions/runs/34554391806/artifacts/10182051649), 123,979 bytes, expires 2026-09-25. SHA-256: `74462e9e00c3a81ec3186cfea6ce27cef34cc0a6ed07a951436d77bb2051b9a7`.
+- [Follow-up PR #14](https://github.com/Dapravith/production-delivery-platform/pull/14) contains the evidence-record documentation update after that tested implementation commit. Its head checks must also pass before merge.
+
+The deliberate failure case is a mocked Maven exit-code test, not a real Jenkins negative run. Jenkins syntax/plugin compatibility and its archive behavior remain unverified until PDP-030 runs on the intended Jenkins environment.
 
 ## Reproduction
 
